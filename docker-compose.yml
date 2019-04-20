@@ -1,0 +1,28 @@
+version: '2'
+services:
+  db:
+    build: ./db
+    image: postgres
+    volumes:
+      - ./db/pgdata:/pgdata
+    ports:
+      - "5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=11111
+      - PGDATA=/pgdata
+      - POSTGRES_DB=dani_development
+
+  todo:
+    build:
+      context: .
+      args:
+        app_env: development
+    image: todo
+    restart: always
+    volumes:
+      - ./app:/go/src/github.com/daniramdani/todo
+    ports:
+      - "3015:3015"
+    links:
+      - db
